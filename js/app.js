@@ -27,6 +27,11 @@ class Presupuesto{
         this.gasto = [];
     }
 
+    nuevoGasto(gasto){
+        this.gasto = [...this.gasto, gasto]
+        console.log(this.gasto);
+    }
+
 }
 
 //Esta es la clase de la interfaz
@@ -95,7 +100,7 @@ function agregarGasto (e){
     //Leer los datos del formulario
 
     const nombre = document.querySelector('#gasto').value;
-    const cantidad = document.querySelector('#cantidad').value;
+    const cantidad = Number (document.querySelector('#cantidad').value);
 
     //Validar
 
@@ -110,7 +115,19 @@ function agregarGasto (e){
 
     }
 
-    console.log('Agregando Gasto')
+    //Generar Objeto con el gasto
 
+    const gasto = {nombre, cantidad, id: Date.now()} //Se tiene un Id sin base de datos.
+
+    //Añade un nuevo gasto
+
+    presupuesto.nuevoGasto(gasto);
+    //console.log(gasto);
+
+    //To' bn!
+    ui.imprimirAlerta('Gasto Agregado Correctamente');
+
+    //Reinicia el formulario
+    formulario.reset();
     
 }
