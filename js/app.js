@@ -24,12 +24,12 @@ class Presupuesto{
     constructor(presupuesto){
         this.presupuesto = Number(presupuesto);
         this.restante = Number(presupuesto);
-        this.gasto = [];
+        this.gastos = [];
     }
 
     nuevoGasto(gasto){
-        this.gasto = [...this.gasto, gasto]
-        console.log(this.gasto);
+        this.gastos = [...this.gastos, gasto]
+        console.log(this.gastos);
     }
 
 }
@@ -69,9 +69,49 @@ class UI{
         setTimeout(() => {
             divMensaje.remove();
         },3000)
-
     }
+
+    agregarGastoListado(gastos){
+
+        this.limpiarHTML(); //Elimina el HTML previo
+
+       // Iterar sobre los gastos
+       gastos.forEach(gasto =>{
+        const {cantidad, nombre, id} = gasto;
+
+        //Crear un LI
+
+        const nuevoGasto = document.createElement('li');
+        nuevoGasto.className = 'list-group-item d-flex justify-content-between align-items-center';
+        //nuevoGasto.setAttribute('data-id', id); // (Es la forma vieja)
+        nuevoGasto.dataset.id = id;
+        console.log(nuevoGasto);
+
+        //Agregar el HTML del gasto 
+        nuevoGasto.innerHTML = `${nombre} <span class="badge badge-primary badge-pill"> ${cantidad}</span>
+        `;
+
+        //Botón para borrar el gasto
+        const  btnBorrar = document.createElement('button');
+        btnBorrar.classList.add('btn', 'btn-danger', 'borrar-gasto');
+        btnBorrar.innerHTML = 'borrar &times;'
+
+        nuevoGasto.appendChild(btnBorrar);
+
+        //Agregar al HTML
+        gastoListado.appendChild(nuevoGasto)
+
+       });
+    }
+
+    limpiarHTML(){
+        while(gastoListado.firstChild){
+            gastoListado.removeChild(gastoListado.firstChild);
+        }
+    };
 }
+
+
 //Instanciar
 const ui = new UI();
 let presupuesto;
@@ -126,6 +166,10 @@ function agregarGasto (e){
 
     //To' bn!
     ui.imprimirAlerta('Gasto Agregado Correctamente');
+
+    //Imprimir los gastos
+    const {gastos} = presupuesto;
+    ui.agregarGastoListado(gastos)
 
     //Reinicia el formulario
     formulario.reset();
