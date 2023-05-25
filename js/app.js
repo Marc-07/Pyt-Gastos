@@ -28,8 +28,15 @@ class Presupuesto{
     }
 
     nuevoGasto(gasto){
-        this.gastos = [...this.gastos, gasto]
-        console.log(this.gastos);
+        this.gastos = [...this.gastos, gasto];
+        this.calcularRestante ();
+    }
+
+    calcularRestante(){
+        const gastado = this.gastos.reduce((total, gasto) => total + gasto.cantidad, 0 )
+        this.restante = this.presupuesto - gastado;
+        console.log(this.restante);
+
     }
 
 }
@@ -44,7 +51,7 @@ class UI{
         
         //Agregar al HTML
         document.querySelector('#total').textContent = presupuesto;
-        document.querySelector('#restante').textContent = restante 
+        document.querySelector('#restante').textContent = restante;
     }
 
     imprimirAlerta(mensaje, tipo){
@@ -85,10 +92,10 @@ class UI{
         nuevoGasto.className = 'list-group-item d-flex justify-content-between align-items-center';
         //nuevoGasto.setAttribute('data-id', id); // (Es la forma vieja)
         nuevoGasto.dataset.id = id;
-        console.log(nuevoGasto);
+        //console.log(nuevoGasto);
 
         //Agregar el HTML del gasto 
-        nuevoGasto.innerHTML = `${nombre} <span class="badge badge-primary badge-pill"> ${cantidad}</span>
+        nuevoGasto.innerHTML = `${nombre} <span class="badge badge-primary badge-pill"> $ ${cantidad}</span>
         `;
 
         //Botón para borrar el gasto
@@ -108,7 +115,12 @@ class UI{
         while(gastoListado.firstChild){
             gastoListado.removeChild(gastoListado.firstChild);
         }
-    };
+    }
+
+    actualizarRestante(restante){
+        document.querySelector('#restante').textContent = restante;
+
+    }
 }
 
 
@@ -168,8 +180,10 @@ function agregarGasto (e){
     ui.imprimirAlerta('Gasto Agregado Correctamente');
 
     //Imprimir los gastos
-    const {gastos} = presupuesto;
-    ui.agregarGastoListado(gastos)
+    const {gastos, restante} = presupuesto;
+    ui.agregarGastoListado(gastos);
+
+    ui.actualizarRestante(restante);
 
     //Reinicia el formulario
     formulario.reset();
